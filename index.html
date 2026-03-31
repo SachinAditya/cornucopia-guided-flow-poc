@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cornucopia Guided Flow (POC)</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin: 40px;
+    }
+    .card {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin: 20px auto;
+      width: 300px;
+      border-radius: 10px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Start Threat Thinking</h2>
+
+<div id="start">
+  <p>What are you working on?</p>
+  <select id="context">
+    <option>Login System</option>
+    <option>API</option>
+    <option>Payment</option>
+  </select>
+  <br><br>
+  <button onclick="startFlow()">Start</button>
+</div>
+
+<div id="card" style="display:none;">
+  <div class="card">
+    <h3>Weak Authentication</h3>
+    <p>You are reviewing login. Users can try passwords multiple times.</p>
+
+    <p><b>What can go wrong?</b></p>
+
+    <button onclick="answer('Yes')">This is a problem</button>
+    <button onclick="answer('No')">Not a problem</button>
+    <button onclick="answer('Review')">Not sure</button>
+  </div>
+</div>
+
+<div id="result" style="display:none;">
+  <h3>Your Findings</h3>
+  <p id="output"></p>
+  <button onclick="restart()">Restart</button>
+</div>
+
+<script>
+  let userAnswer = "";
+
+  function startFlow() {
+    document.getElementById("start").style.display = "none";
+    document.getElementById("card").style.display = "block";
+  }
+
+  function answer(ans) {
+    userAnswer = ans;
+
+    document.getElementById("card").style.display = "none";
+    document.getElementById("result").style.display = "block";
+
+    let context = document.getElementById("context").value;
+
+document.getElementById("output").innerText =
+  context + " - Weak Authentication → " + userAnswer;
+  }
+
+  function restart() {
+    location.reload();
+  }
+</script>
+
+</body>
+</html>
