@@ -12,7 +12,7 @@
       border: 1px solid #ccc;
       padding: 20px;
       margin: 20px auto;
-      width: 300px;
+      width: 320px;
       border-radius: 10px;
     }
     button {
@@ -40,8 +40,8 @@
 
 <div id="card" style="display:none;">
   <div class="card">
-    <h3>Weak Authentication</h3>
-    <p>You are reviewing login. Users can try passwords multiple times.</p>
+    <h3></h3>
+    <p class="card-text"></p>
 
     <p><b>What can go wrong?</b></p>
 
@@ -53,28 +53,67 @@
 
 <div id="result" style="display:none;">
   <h3>Your Findings</h3>
-  <p id="output"></p>
+  <pre id="output"></pre>
   <button onclick="restart()">Restart</button>
 </div>
 
 <script>
-  let userAnswer = "";
+  let currentCardIndex = 0;
+  let answers = [];
+
+  let cards = [
+    {
+      title: "Weak Authentication",
+      text: "Users can try passwords multiple times without limits."
+    },
+    {
+      title: "Session Issues",
+      text: "Session tokens are not invalidated properly after logout."
+    }
+  ];
 
   function startFlow() {
     document.getElementById("start").style.display = "none";
     document.getElementById("card").style.display = "block";
+    showCard();
+  }
+
+  function showCard() {
+    let card = cards[currentCardIndex];
+
+    document.querySelector(".card h3").innerText = card.title;
+    document.querySelector(".card-text").innerText = card.text;
   }
 
   function answer(ans) {
-    userAnswer = ans;
+    let context = document.getElementById("context").value;
 
+    answers.push({
+      context: context,
+      card: cards[currentCardIndex].title,
+      answer: ans
+    });
+
+    currentCardIndex++;
+
+    if (currentCardIndex < cards.length) {
+      showCard();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
     document.getElementById("card").style.display = "none";
     document.getElementById("result").style.display = "block";
 
-    let context = document.getElementById("context").value;
+    let output = "";
 
-document.getElementById("output").innerText =
-  context + " - Weak Authentication → " + userAnswer;
+    answers.forEach(item => {
+      output += item.context + " - " + item.card + " → " + item.answer + "\n";
+    });
+
+    document.getElementById("output").innerText = output;
   }
 
   function restart() {
